@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Distance of 2 point</title>
+    </head>
+    <body>
+        <h1>Distance of 2 point</h1>
+        <div id="output"></div>
+        <script>
+            fetch('results.json')
+                .then(response => response.json())
+                .then(data => {
+                    const output = document.getElementById('output');
+                    output.innerHTML = `
+                        <Right><p>The first point is (${data.firstPoint.x}, ${data.firstPoint.y})</p>
+                        <p>The second point is (${data.secondPoint.x}, ${data.secondPoint.y})</p>
+                        <p>The distance between the two points is ${data.distance}</p>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        </script>
+    </body>
+
+</html>
+

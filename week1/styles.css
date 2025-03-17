@@ -1,0 +1,47 @@
+/* Use google fonts roboto */
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700');
+
+/* Align everything to center */
+body {
+    background-color: #f5f5f5;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+
+/* Align the table and list to center */
+table {
+    margin: 0 auto;
+    text-align: left;
+    border: 1px solid #000;
+}
+
+tr:nth-child(even) {
+    background-color: #D3D3D3;
+}
+
+
+/* List settings */
+ul {
+    list-style-type: none;
+    margin: 0 auto;
+    padding: 0;
+    text-align: center;
+}
+
+/* Link settings */
+a {
+    color: #000;
+    padding-bottom: 4px;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #000;
+    text-decoration: underline;
+}
+
+img {
+    border: 1px solid #000;
+    border-radius: 5px;
+    max-width: 100%;
+}
