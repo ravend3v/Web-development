@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Score system</title>
+    </head>
+    <body>
+        <h1>Score system</h1>
+        <div id="output"></div>
+        <script>
+            fetch('scoreResults.json')
+                .then(response => response.json())
+                .then(data => {
+                    const output = document.getElementById('output');
+                    output.innerHTML = `
+                        <p>The score is ${data.score}</p>
+                        <p>The grade is ${data.grade}</p>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        </script>
+    </body>
+</html>
+
