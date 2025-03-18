@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sum of natural numbers</title>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <h1>Sum of natural numbers</h1>
+
+        <!-- Get the results from the json file -->
+        <div id="output"></div>
+        <script>
+            fetch('naturalResults.json')
+                .then(response => response.json())
+                .then(data => {
+                    const output = document.getElementById('output');
+                    output.innerHTML = `
+                        <p>The num is ${data.number}</p>
+                        <p>The natural number sum is ${data.sum}</p>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        </script>
+    </body>
+</html>
+
