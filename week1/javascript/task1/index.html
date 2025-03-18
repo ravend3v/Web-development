@@ -9,22 +9,8 @@
    </head>
    <body>
         <h1>Temperature Converter</h1>
-        <div id="output"</div>
-        <script>
-            fetch('results.json')
-                .then(response => response.json())
-                .then(data => {
-                    const output = document.getElementById('output');
-                    output.innerHTML = `
-                        <p>The temperature in Celsius is ${data.celsius}</p>
-                        <p>The temperature in Fahrenheit is ${data.fahrenheit}</p>
-                        <p>The temperature in Kelvin is ${data.kelvin}</p>
-                    `;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        </script>
+        <div id="result"></div>
+        <script src="temp.js"></script>
    </body>
 </html>
 

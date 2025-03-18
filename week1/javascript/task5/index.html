@@ -7,21 +7,10 @@
     <body>
         <h1>Sum of natural numbers</h1>
 
-        <!-- Get the results from the json file -->
-        <div id="output"></div>
-        <script>
-            fetch('naturalResults.json')
-                .then(response => response.json())
-                .then(data => {
-                    const output = document.getElementById('output');
-                    output.innerHTML = `
-                        <p>The num is ${data.number}</p>
-                        <p>The natural number sum is ${data.sum}</p>
-                    `;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+        <!-- Get the results -->
+        <div id="sum-container"></div>
+        <script src="naturalNum.js">
+            
         </script>
     </body>
 </html>

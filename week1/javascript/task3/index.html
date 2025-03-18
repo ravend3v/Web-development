@@ -1,26 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Type of the triangle</title>
+        <title>Shape of the triangle</title>
     </head>
     <body>
-        <h1>Type of the triangle</h1>
-        <div id="output"></div>
-        <script>
-            fetch('triangleResults.json')
-                .then(response => response.json())
-                .then(data => {
-                    const output = document.getElementById('output');
-                    output.innerHTML = `
-                        <p>The type of the triangle is ${data.type}</p>
-                    `;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        </script>
+        <h1>Shape of the triangle</h1>
+        <div id="result"></div>
+        <script src="triangleCalc.js"></script>
     </body>
 </html>
 
