@@ -771,3 +771,48 @@ const restaurants = [
 ];
 
 // your code here
+
+// Get the users current position
+function showPosition(position) {
+    const userLat = position.coords.latitude;
+    const userLon = position.coords.longitude;
+
+    const sortedRestaurants = restaurants.map(restaurant => {
+        const [restaurantLon, restaurantLat] = restaurant.location.coordinates;
+        const distance = calculateDistance(userLat, userLon, restaurantLat, restaurantLon);
+        return { ...restaurant, distance };
+    }).sort((a, b) => a.distance - b.distance);
+
+    displayRestaurants(sortedRestaurants);
+}
+
+// Function to calculate the distance
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const dLat = lat2 - lat1;
+    const dLon = lon2 - lon1;
+    return Math.sqrt(dLat * dLat + dLon * dLon);
+}
+
+// Function to display the sorted list on the page
+function displayRestaurants(restaurants) {
+    const restaurantList = document.getElementById('restaurant-list');
+    restaurantList.innerHTML = '';
+
+    restaurants.forEach(restaurant => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${restaurant.name}</td>
+            <td>${restaurant.address}, ${restaurant.city}</td>
+        `;
+        restaurantList.appendChild(row)
+    });
+}
+
+// Check if the geolocation is avaible
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition, error => {
+        console.log('Error getting location: ', error);
+    })
+} else {
+    console.error('Geolocation is not supported by this browser.');
+}

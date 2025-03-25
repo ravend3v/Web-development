@@ -771,3 +771,49 @@ const restaurants = [
 ];
 
 // your code here
+
+// Function to initialize the map
+function initializeMap(lat, lon) {
+    const map = L.map('map').setView([lat, lon], 13);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Function markers
+    function addRestaurantMarkers(restaurants) {
+        restaurants.forEach(restaurant => {
+            const [lon, lat] = restaurant.location.coordinates;
+            const marker = L.marker([lat, lon]).addTo(map);
+
+            // Add popup with restaurant name and address
+            marker.bindPopup(`
+                <h3>${restaurant.name}</h3>
+                <p>${restaurant.address}</p>
+            `);
+        });
+    }
+
+    // Add restaurant markers to the map
+    addRestaurantMarkers(restaurants);
+}
+
+// Check if geolocation is supported
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            initializeMap(lat, lon);
+        },
+        (error) => {
+            console.error("Error getting user's loaction: ", error);
+
+            initializeMap(60.188222, 24.829696);
+        }
+    );
+} else {
+    console.error("Geolocation is not supported by this browser.")
+    initializeMap(60.188222, 24.829696)
+}
