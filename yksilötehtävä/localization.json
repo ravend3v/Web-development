@@ -1,0 +1,26 @@
+{
+    "en": {
+        "welcome": "Welcome",
+        "header-title": "Student Restaurants",
+        "login": "Login",
+        "logout": "Logout",
+        "profile": "Profile",
+        "home": "Home",
+        "updateProfile": "Update Profile",
+        "profileUpdated": "Profile updated successfully!",
+        "error": "Error",
+        "userNotFound": "User not found!"
+    },
+    "fi": {
+        "welcome": "Tervetuloa",
+        "header-title": "Opiskelijaravintolat",
+        "login": "Kirjaudu sisään",
+        "logout": "Kirjaudu ulos",
+        "profile": "Profiili",
+        "home": "Koti",
+        "updateProfile": "Päivitä profiili",
+        "profileUpdated": "Profiili päivitetty onnistuneesti!",
+        "error": "Virhe",
+        "userNotFound": "Käyttäjää ei löytynyt!"
+    }
+}
