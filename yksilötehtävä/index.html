@@ -1,94 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Music Finder</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-        <link rel="stylesheet" href="styles/styles.css">
-    </head>
-    <body class="bg-black text-white">
-        <div class="hero-image relative h-40 bg-center bg-no-repeat bg-cover" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../public/images/hero.jpg');">
-            <div class="header absolute top-0 w-full flex justify-end p-4">
-                <ul class="list-none m-0 p-0 flex">
-                    <li class="mr-4">
-                        <a href="#categories" class="text-white text-lg no-underline hover:text-blue-500">Categories</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="hero-text absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                <h1 class="text-4xl">Welcome to the music finder</h1>
-            </div>
-        </div>
-        
-        <div class="browse-categories flex flex-col items-center py-20 mb-12" id="categories">
-            <h1 class="text-3xl mb-8">Browse By Genre</h1>
-            <div class="category-wrapper flex flex-wrap justify-center items-center bg-black p-8 w-full">
-                <div class="category-box bg-pink-600 rounded-lg p-8 text-2xl m-4 flex items-center justify-center h-40 w-40">
-                    <p>Rock</p>
-                </div>
-                <div class="category-box bg-yellow-600 rounded-lg p-8 text-2xl m-4 flex items-center justify-center h-40 w-40">
-                    <p>Metal</p>
-                </div>
-                <div class="category-box bg-blue-600 rounded-lg p-8 text-2xl m-4 flex items-center justify-center h-40 w-40">
-                    <p>Pop</p>
-                </div>
-                <div class="category-box bg-green-600 rounded-lg p-8 text-2xl m-4 flex items-center justify-center h-40 w-40">
-                    <p>Jazz</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="music-news text-center py-20 bg-black">
-            <h1 class="text-3xl mb-8">Music News</h1>
-            <p class="mb-4">This will come from the news API:</p>
-            <a href="https://newsapi.org/" target="_blank" class="text-blue-500 underline mb-8 inline-block">Link to API</a>
-            <div class="music-news-wrapper flex flex-wrap -m-3">
-                <div class="news-box w-full sm:w-1/2 md:w-1/3 flex flex-col p-3">
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden flex-1 flex flex-col">
-                        <div class="news-image bg-cover h-48" style="background-image: url('https://images.unsplash.com/photo-1523978591478-c753949ff840?w=900');"></div>
-                        <div class="news-content p-4 flex-1 flex flex-col">
-                            <h2 class="mb-4 text-2xl">News Title</h2>
-                            <p class="mb-4 text-gray-700 text-sm flex-1">News Content</p>
-                            <a href="#" class="border-t border-gray-300 pt-2 text-xs text-gray-600 hover:text-red-500 uppercase no-underline tracking-wide">Read More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="news-box w-full sm:w-1/2 md:w-1/3 flex flex-col p-3">
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden flex-1 flex flex-col">
-                        <div class="news-image bg-cover h-48" style="background-image: url('https://images.unsplash.com/photo-1497398276231-94ff5dc90217?w=900');"></div>
-                        <div class="news-content p-4 flex-1 flex flex-col">
-                            <h2 class="mb-4 text-2xl">News Title</h2>
-                            <p class="mb-4 text-gray-700 text-sm flex-1">News Content</p>
-                            <a href="#" class="border-t border-gray-300 pt-2 text-xs text-gray-600 hover:text-red-500 uppercase no-underline tracking-wide">Read More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="news-box w-full sm:w-1/2 md:w-1/3 flex flex-col p-3">
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden flex-1 flex flex-col">
-                        <div class="news-image bg-cover h-48" style="background-image: url('https://images.unsplash.com/photo-1503863937795-62954a3c0f05?w=900');"></div>
-                        <div class="news-content p-4 flex-1 flex flex-col">
-                            <h2 class="mb-4 text-2xl">News Title</h2>
-                            <p class="mb-4 text-gray-700 text-sm flex-1">News Content</p>
-                            <a href="#" class="border-t border-gray-300 pt-2 text-xs text-gray-600 hover:text-red-500 uppercase no-underline tracking-wide">Read More</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <footer class="footer bg-black text-white text-center py-4">
-            <div class="footer-content flex justify-center">
-                <div class="footer-box bg-gray-800 rounded-lg p-4 m-2">
-                    <p>test</p>                
-                </div>
-                <div class="footer-box bg-gray-800 rounded-lg p-4 m-2">
-                    <p>test</p>
-                </div>
-                <div class="footer-box bg-gray-800 rounded-lg p-4 m-2">
-                    <p>test</p>
-                </div>
-            </div>
-        </footer>
-    </body>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opiskelijaravintolat</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Opiskelijaravintolat</h1>
+    </header>
+    <main>
+        <section id="restaurant-list">
+            <h2>Ravintolat</h2>
+            <ul id="restaurants"></ul>
+        </section>
+        <section id="menu">
+            <h2>Ruokalista</h2>
+            <div id="menu-content"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Elias Ojala</p>
+    </footer>
+    <script src="app.js"></script>
+</body>
 </html>
