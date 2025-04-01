@@ -1,31 +1,197 @@
-body {
-    font-family: Arial, sans-serif;
+html, body {
+    height: 100%;
     margin: 0;
-    padding: 0;
-    line-height: 1.6;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
 }
 
+/* Header styling */
 header {
-    background: #0073e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #0073e6;
     color: white;
-    padding: 1rem 0;
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+}
+
+/* Title styling */
+header h1 {
+    margin: 0;
     text-align: center;
+    flex: 1;
+}
+
+/* User actions container */
+#user-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+}
+
+/* Buttons styling */
+#user-actions button {
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: white;
+    color: #0073e6;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#user-actions button:hover {
+    background-color: #005bb5;
+    color: white;
 }
 
 main {
-    padding: 1rem;
-    flex: 1; 
+    flex: 1;
 }
 
-section {
-    margin-bottom: 2rem;
+/* Filter section styling */
+#filter-section {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }
 
+#filter-section label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+#filter-section input {
+    margin-bottom: 10px;
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#filter-section button {
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #0073e6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#filter-section button:hover {
+    background-color: #005bb5;
+}
+
+/* Restaurant list container */
+#restaurant-list {
+    max-height: 300px; /* Limit the height to 10 rows */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+}
+
+/* Restaurant list items */
+#restaurant-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#restaurant-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+/* Add darker background for every second item */
+#restaurant-list li:nth-child(odd) {
+    background-color: #f9f9f9; /* Light background for odd items */
+}
+
+#restaurant-list li:nth-child(even) {
+    background-color: #e6e6e6; /* Darker background for even items */
+}
+
+#restaurant-list li:last-child {
+    border-bottom: none;
+}
+
+#restaurant-list li:hover {
+    background-color: #d0d0d0; /* Highlight on hover */
+    cursor: pointer;
+}
+
+/* Map container */
+#map-section {
+    margin-top: 20px;
+}
+
+#map {
+    width: 100%;
+    height: 400px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Footer styling */
 footer {
     text-align: center;
     padding: 1rem 0;
     background: #f4f4f4;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #user-actions {
+        justify-content: center;
+        width: 100%;
+    }
+
+    #filter-section {
+        padding: 5px;
+    }
+
+    #restaurant-list {
+        max-height: 200px; /* Adjust height for smaller screens */
+    }
+
+    #map {
+        height: 300px; /* Adjust map height for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 18px;
+    }
+
+    #user-actions button {
+        font-size: 14px;
+        padding: 5px;
+    }
+
+    #filter-section input {
+        font-size: 12px;
+    }
+
+    #filter-section button {
+        font-size: 12px;
+    }
+
+    #restaurant-list li {
+        font-size: 12px;
+    }
 }

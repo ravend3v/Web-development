@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profiilisivu</title>
+    <link rel="stylesheet" href="../styles/profile.css">
+
+    <!-- Sweet alerts for nicer notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+</head>
+<body>
+    <header>
+        <h1>Profiilisivu</h1>
+        <div id="home-button">
+            <!-- Home button will be dynamically added here -->
+        </div>
+    </header>
+    <main>
+        <section id="profile-cards">
+            <!-- Profile Picture Card -->
+            <div class="card" id="profile-picture-card">
+                <h2>Profiilikuva</h2>
+                <div id="profile-picture-container">
+                    <img id="profile-picture-preview" alt="Profiilikuva" style="display: none;">
+                    <input type="file" id="profile-picture" accept="image/*" style="display: none;">
+                </div>
+                <p>Klikkaa kuvaa vaihtaaksesi</p>
+            </div>
+
+            <!-- Username Card -->
+            <div class="card" id="username-card">
+                <h2>Käyttäjänimi</h2>
+                <p id="username"></p>
+            </div>
+
+            <!-- Favorite Restaurant Card -->
+            <div class="card" id="favorite-restaurant-card">
+                <h2>Suosikkiravintola</h2>
+                <input type="text" id="favorite-restaurant" placeholder="Lisää suosikkiravintola">
+            </div>
+        </section>
+        <button id="update-profile-button">Päivitä tiedot</button>
+    </main>
+    <footer>
+        <p>&copy; 2025 Elias Ojala</p>
+    </footer>
+    <script src="../scripts/profile.js"></script>
+</body>
+</html>

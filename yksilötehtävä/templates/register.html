@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirjaudu sisään</title>
+    <link rel="stylesheet" href="../styles/register.css">
+
+    <!-- Sweet alerts for nicer notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+</head>
+<body>
+    <header>
+        <h1>Rekisteröidy</h1>
+    </header>
+    <main>
+        <section id="register-section">
+            <h2>Rekisteröidy</h2>
+            <form id="register-form">
+                <label for="new-username">Käyttäjänimi:</label>
+                <input type="text" id="new-username" required>
+                <label for="new-password">Salasana:</label>
+                <input type="password" id="new-password" required>
+                <button type="submit">Rekisteröidy</button>
+                <p><a href="login.html" aria-label="Rekisteröidy sivulle">Kirjaudu sisään</a></p>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Elias Ojala</p>
+    </footer>
+    <script src="../scripts/register.js"></script>
+</body>
+</html>
