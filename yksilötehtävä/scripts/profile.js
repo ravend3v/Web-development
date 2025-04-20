@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update the avatar preview
             profilePicturePreview.src = `https://media2.edu.metropolia.fi/uploads/${data.data.avatar}`;
         } catch (error) {
-            console.error('Error uploading avatar:', error); // Debugging
             alert(`Virhe: ${error.message}`);
         }
     });

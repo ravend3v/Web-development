@@ -18,7 +18,7 @@ function addLocateMeButton() {
         button.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
         button.addEventListener('click', () => {
             if (userLocation) {
-                map.setView(userLocation, 14); // Fly to user's location
+                map.setView(userLocation, 14);
             } else {
                 alert('Sijaintia ei ole saatavilla. Salli sijainnin käyttö selaimen asetuksista.');
             }
@@ -36,7 +36,7 @@ function initializeMap() {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    addLocateMeButton(); // Add the "Locate Me" button
+    addLocateMeButton();
 }
 
 // Plot restaurants on the map

@@ -6,10 +6,10 @@ export async function loadTranslations(language) {
             throw new Error(`Failed to load translations: ${response.statusText}`);
         }
         const translations = await response.json();
-        return translations[language]; // Return the translations for the selected language
+        return translations[language];
     } catch (error) {
         console.error('Error loading translations:', error);
-        return {}; // Return an empty object on error
+        return {};
     }
 }
 
@@ -17,7 +17,7 @@ export async function loadTranslations(language) {
 function applyTranslations(translations) {
     document.querySelectorAll('[data-translate]').forEach(element => {
         const key = element.getAttribute('data-translate');
-        if (translations[key]) { // Ensure the key exists in the translations
+        if (translations[key]) {
             if (element.tagName === 'INPUT' && element.type === 'text') {
                 element.setAttribute('placeholder', translations[key]);
             } else {

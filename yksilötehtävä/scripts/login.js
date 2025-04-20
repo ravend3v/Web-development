@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
 
+    // Handle login form submission
     loginForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         const username = document.getElementById('username').value;
@@ -22,25 +23,25 @@ async function loginUser(credentials) {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || 'Kirjautuminen epäonnistui.');
+            throw new Error(errorData.message || 'Login failed.');
         }
 
         const responseData = await response.json();
         const { token, data } = responseData;
 
+        // Store authentication token in localStorage
         localStorage.setItem('token', token);
 
-        // Save user data, including favorite restaurant name, in localStorage
+        // Save user details in localStorage
         const currentUser = {
             username: data.username,
-            favouriteRestaurantName: data.favouriteRestaurant || 'Ei valittua suosikkiravintolaa'
+            favouriteRestaurantName: data.favouriteRestaurant || 'No favorite restaurant selected'
         };
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
-        alert('Kirjautuminen onnistui!');
+        alert('Login successful!');
         location.href = '/';
     } catch (error) {
-        console.error('Error logging in:', error);
-        alert(`Virhe: ${error.message}`);
+        alert(`Error: ${error.message}`);
     }
 }
