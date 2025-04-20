@@ -6,6 +6,20 @@ export async function loadTranslations(language) {
             throw new Error(`Failed to load translations: ${response.statusText}`);
         }
         const translations = await response.json();
+        translations.en = {
+            ...translations.en,
+            'home-button': 'Home',
+            'profile-page': 'Profile Page',
+            'logout': 'Logout',
+            'login': 'Login',
+        };
+        translations.fi = {
+            ...translations.fi,
+            'home-button': 'Etusivulle',
+            'profile-page': 'Profiilisivu',
+            'logout': 'Kirjaudu ulos',
+            'login': 'Kirjaudu sisään',
+        };
         return translations[language];
     } catch (error) {
         console.error('Error loading translations:', error);

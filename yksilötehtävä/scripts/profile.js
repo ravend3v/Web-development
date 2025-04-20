@@ -3,20 +3,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const profilePictureInput = document.getElementById('profile-picture');
     const token = localStorage.getItem('token');
     const favoriteRestaurantDropdown = document.getElementById('favorite-restaurant');
-    const updateProfileButton = document.getElementById('update-profile-button');
     const usernameInput = document.getElementById('username-input');
     const usernameDisplay = document.getElementById('username');
+    const updateUsernameButton = document.getElementById('update-username-button');
+    const updateFavoriteRestaurantButton = document.getElementById('update-favorite-restaurant-button');
+
+    // Fetch user profile data from the server
+    async function fetchUserProfile() {
+        if (!token) {
+            console.error('Token is missing. Please log in again.');
+            alert('Virhe: Kirjaudu sisään uudelleen.');
+            return;
+        }
+
+        try {
+            const response = await fetch('https://media2.edu.metropolia.fi/restaurant/api/v1/users/token', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                console.error(`Error fetching user profile: ${response.status} ${response.statusText}`);
+                throw new Error('Käyttäjätietojen lataaminen epäonnistui.');
+            }
+
+            const userData = await response.json();
+            console.log('Fetched user profile:', userData);
+
+            // Save the fetched data to localStorage
+            localStorage.setItem('currentUser', JSON.stringify(userData));
+
+            // Update UI with fetched data
+            loadAvatar();
+            loadUsername();
+            loadFavoriteRestaurant();
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+            alert('Virhe käyttäjätietojen lataamisessa.');
+        }
+    }
 
     // Load the current avatar (if available)
     function loadAvatar() {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser && currentUser.avatar) {
+            // Construct the full URL for the avatar
             profilePicturePreview.src = `https://media2.edu.metropolia.fi/uploads/${currentUser.avatar}`;
-            profilePicturePreview.style.display = 'block';
         } else {
             profilePicturePreview.src = '../public/images/default-avatar.png';
-            profilePicturePreview.style.display = 'block';
         }
+        profilePicturePreview.style.display = 'block';
     }
 
     // Load the current username (if available)
@@ -31,11 +68,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Load the current favorite restaurant (if available)
-    function loadFavoriteRestaurant() {
+    async function loadFavoriteRestaurant() {
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         const currentFavoriteRestaurant = document.getElementById('current-favorite-restaurant');
-        if (currentUser && currentUser.favouriteRestaurantName) {
-            currentFavoriteRestaurant.textContent = currentUser.favouriteRestaurantName;
+
+        if (currentUser && currentUser.favouriteRestaurant) {
+            try {
+                const response = await fetch(`https://media2.edu.metropolia.fi/restaurant/api/v1/restaurants/${currentUser.favouriteRestaurant}`);
+                if (!response.ok) {
+                    throw new Error('Suosikkiravintolan tietojen lataaminen epäonnistui.');
+                }
+
+                const restaurantData = await response.json();
+                currentFavoriteRestaurant.textContent = restaurantData.name;
+            } catch (error) {
+                console.error('Error fetching favorite restaurant details:', error);
+                currentFavoriteRestaurant.textContent = 'Ei valittua suosikkiravintolaa';
+            }
         } else {
             currentFavoriteRestaurant.textContent = 'Ei valittua suosikkiravintolaa';
         }
@@ -69,15 +118,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 const errorData = await response.json();
+                console.error('Avatar upload failed:', errorData);
                 throw new Error(errorData.error || 'Profiilikuvan lataaminen epäonnistui.');
             }
 
             const data = await response.json();
+            console.log('Avatar upload response:', data);
+
             alert('Profiilikuvasi on päivitetty onnistuneesti.');
 
             // Update the avatar preview
-            profilePicturePreview.src = `https://media2.edu.metropolia.fi/uploads/${data.data.avatar}`;
+            if (data.data && data.data.avatar) {
+                profilePicturePreview.src = `https://media2.edu.metropolia.fi/uploads/${data.data.avatar}`;
+
+                // Update localStorage with the new avatar
+                const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+                currentUser.avatar = data.data.avatar;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            } else {
+                console.error('Avatar URL missing in response.');
+                alert('Virhe: Profiilikuvan URL puuttuu.');
+            }
         } catch (error) {
+            console.error('Error uploading avatar:', error);
             alert(`Virhe: ${error.message}`);
         }
     });
@@ -102,21 +165,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Update the user's profile (username and favorite restaurant)
-    updateProfileButton.addEventListener('click', async () => {
-        const selectedRestaurantId = favoriteRestaurantDropdown.value;
-        const selectedRestaurantName = favoriteRestaurantDropdown.options[favoriteRestaurantDropdown.selectedIndex]?.text;
+    // Check if the username is available
+    async function isUsernameAvailable(username) {
+        try {
+            const response = await fetch(`https://media2.edu.metropolia.fi/restaurant/api/v1/users/available/${username}`);
+            if (!response.ok) {
+                throw new Error('Käyttäjänimen tarkistaminen epäonnistui.');
+            }
+            const data = await response.json();
+            return data.available;
+        } catch (error) {
+            console.error('Error checking username availability:', error);
+            alert('Virhe käyttäjänimen tarkistamisessa.');
+            return false;
+        }
+    }
+
+    // Update the user's username
+    updateUsernameButton.addEventListener('click', async () => {
         const updatedUsername = usernameInput.value.trim();
 
-        if (!selectedRestaurantId || !updatedUsername) {
-            alert('Täytä käyttäjänimi ja valitse suosikkiravintola ennen päivittämistä.');
+        if (!updatedUsername) {
+            alert('Syötä käyttäjänimi ennen päivittämistä.');
             return;
         }
 
-        const updatedData = {
-            username: updatedUsername,
-            favouriteRestaurant: selectedRestaurantId
-        };
+        // Check if the username is available
+        const usernameAvailable = await isUsernameAvailable(updatedUsername);
+        if (!usernameAvailable) {
+            alert('Käyttäjänimi on jo varattu. Valitse toinen käyttäjänimi.');
+            return;
+        }
 
         try {
             const response = await fetch('https://media2.edu.metropolia.fi/restaurant/api/v1/users', {
@@ -125,33 +204,75 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify(updatedData)
+                body: JSON.stringify({ username: updatedUsername })
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || 'Tietojen päivittäminen epäonnistui.');
+                console.error('Username update failed:', errorData);
+                throw new Error(errorData.message || 'Käyttäjänimen päivittäminen epäonnistui.');
             }
 
-            // Update the local storage and UI with the new data
+            const responseData = await response.json();
+            console.log('Username update response:', responseData);
+
+            // Update the local storage and UI with the new username
             const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
             currentUser.username = updatedUsername;
-            currentUser.favouriteRestaurantName = selectedRestaurantName;
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
             usernameDisplay.textContent = updatedUsername;
-            document.getElementById('current-favorite-restaurant').textContent = selectedRestaurantName;
-
-            alert('Profiilisi on päivitetty onnistuneesti.');
+            alert('Käyttäjänimesi on päivitetty onnistuneesti.');
         } catch (error) {
-            console.error('Error updating profile:', error);
+            console.error('Error updating username:', error);
+            alert(`Virhe: ${error.message}`);
+        }
+    });
+
+    // Update the user's favorite restaurant
+    updateFavoriteRestaurantButton.addEventListener('click', async () => {
+        const selectedRestaurantId = favoriteRestaurantDropdown.value;
+        const selectedRestaurantName = favoriteRestaurantDropdown.options[favoriteRestaurantDropdown.selectedIndex]?.text;
+
+        if (!selectedRestaurantId) {
+            alert('Valitse suosikkiravintola ennen päivittämistä.');
+            return;
+        }
+
+        try {
+            const response = await fetch('https://media2.edu.metropolia.fi/restaurant/api/v1/users', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ favouriteRestaurant: selectedRestaurantId })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Favorite restaurant update failed:', errorData);
+                throw new Error(errorData.message || 'Suosikkiravintolan päivittäminen epäonnistui.');
+            }
+
+            const responseData = await response.json();
+            console.log('Favorite restaurant update response:', responseData);
+
+            // Update the local storage and UI with the new favorite restaurant
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            currentUser.favouriteRestaurantName = selectedRestaurantName;
+            currentUser.favouriteRestaurant = selectedRestaurantId; // Save the ID as well
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            document.getElementById('current-favorite-restaurant').textContent = selectedRestaurantName;
+            alert('Suosikkiravintolasi on päivitetty onnistuneesti.');
+        } catch (error) {
+            console.error('Error updating favorite restaurant:', error);
             alert(`Virhe: ${error.message}`);
         }
     });
 
     // Load the avatar, username, favorite restaurant, and populate restaurants on page load
-    loadAvatar();
-    loadUsername();
-    loadFavoriteRestaurant();
+    fetchUserProfile();
     populateRestaurants();
 });

@@ -12,7 +12,7 @@
 <body>
     <header>
         <h1 data-translate="profile-title">Profiilisivu</h1>
-        <button id="home-button" onclick="location.href='/'">Etusivulle</button>
+        <button id="home-button" onclick="location.href='/~eliasoj/web-ohjelmointi/yksilotehtava/'" data-translate="home-button">Etusivulle</button>
         <select id="language-selector">
             <option value="en">En</option>
             <option value="fi">Fi</option>
@@ -35,6 +35,7 @@
                 <h2 data-translate="username">Käyttäjänimi</h2>
                 <p id="username" data-translate="username"></p>
                 <input type="text" id="username-input" placeholder="Syötä uusi käyttäjänimi">
+                <button id="update-username-button" data-translate="update-username">Päivitä käyttäjänimi</button>
             </div>
 
             <!-- Favorite Restaurant Card -->
@@ -45,9 +46,9 @@
                     <option value="" disabled selected data-translate="select-restaurant">Valitse ravintola</option>
                     <!-- Options will be dynamically populated -->
                 </select>
+                <button id="update-favorite-restaurant-button" data-translate="update-favorite-restaurant">Päivitä suosikkiravintola</button>
             </div>
         </section>
-        <button data-translate="update-profile" id="update-profile-button">Päivitä tiedot</button>
     </main>
     <footer>
         <p>&copy; 2025 Elias Ojala</p>

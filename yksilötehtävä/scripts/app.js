@@ -16,18 +16,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     // Render user actions (login/logout/profile buttons)
-    function renderUserActions() {
+    async function renderUserActions() {
         userActions.innerHTML = '';
+
+        const language = localStorage.getItem('language') || 'en';
+        const translations = await loadTranslations(language);
 
         if (token && currentUser) {
             const profileButton = document.createElement('button');
-            profileButton.textContent = `Profiilisivu (${currentUser.username})`;
+            profileButton.textContent = `${translations['profile'] || 'Profiili'} (${currentUser.username})`;
             profileButton.addEventListener('click', () => {
                 window.location.href = 'templates/profile.html';
             });
 
             const logoutButton = document.createElement('button');
-            logoutButton.textContent = 'Kirjaudu ulos';
+            logoutButton.textContent = translations['logout'] || 'Kirjaudu ulos';
             logoutButton.addEventListener('click', () => {
                 localStorage.removeItem('token');
                 localStorage.removeItem('currentUser');
@@ -39,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
             userActions.appendChild(logoutButton);
         } else {
             const loginButton = document.createElement('button');
-            loginButton.textContent = 'Kirjaudu sisään';
+            loginButton.textContent = translations['login'] || 'Kirjaudu sisään';
             loginButton.addEventListener('click', () => {
                 window.location.href = 'templates/login.html';
             });
@@ -253,9 +256,10 @@ document.addEventListener('DOMContentLoaded', () => {
     searchInput.addEventListener('input', searchRestaurants);
 
     // Update translations when the language changes
-    document.getElementById('language-selector').addEventListener('change', (event) => {
+    document.getElementById('language-selector').addEventListener('change', async (event) => {
         const selectedLanguage = event.target.value;
         localStorage.setItem('language', selectedLanguage);
+        await renderUserActions(); // Re-render user actions with updated translations
         displayRestaurants(restaurants); // Re-render restaurants with updated translations
         populateFilterOptions(restaurants); // Update filter options with new translations
     });

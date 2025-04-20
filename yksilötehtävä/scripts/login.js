@@ -40,7 +40,7 @@ async function loginUser(credentials) {
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
         alert('Login successful!');
-        location.href = '/';
+        location.href = '/~eliasoj/web-ohjelmointi/yksilotehtava/';
     } catch (error) {
         alert(`Error: ${error.message}`);
     }
