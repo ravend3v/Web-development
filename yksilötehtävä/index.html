@@ -5,8 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Opiskelijaravintolat - Löydä opiskelijaravintolat helposti kartalta ja listalta.">
     <title>Opiskelijaravintolat</title>
-    <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles/global.css">
+    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="styles/modal.css">
+
+    <!-- Favicon -->
     <link rel="icon" href="public/images/favicon.ico" type="image/x-icon">
 
     <!-- Leaflet for the map functions -->
@@ -43,7 +49,7 @@
         <section id="restaurant-search" aria-labelledby="search-title">
             <h2 id="search-title" data-translate="search-title">Etsi ravintoloita</h2>
             <label for="restaurant-search-input" class="sr-only" data-translate="search-label">Hae ravintoloita</label>
-            <input type="text" id="restaurant-search-input" placeholder="Hae ravintoloita..." aria-label="Search Restaurants">
+            <input type="text" id="restaurant-search-input" placeholder="Hae ravintoloita..." aria-label="Search Restaurants" data-translate="search-placeholder">
         </section>
 
         <!-- Restaurant List Section -->

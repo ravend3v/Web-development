@@ -23,7 +23,12 @@
         "profile-updated": "Profile updated successfully!",
         "error": "Error",
         "userNotFound": "User not found!",
-        "current-favorite-restaurant": "No favorite restaurant selected"
+        "current-favorite-restaurant": "No favorite restaurant selected",
+        "daily-menu": "Daily Menu",
+        "weekly-menu": "Weekly Menu",
+        "search-title": "Search Restaurants",
+        "search-label": "Search Restaurants",
+        "search-placeholder": "Search restaurants..."
     },
     "fi": {
         "welcome": "Tervetuloa",
@@ -49,6 +54,11 @@
         "profile-updated": "Profiili päivitetty onnistuneesti!",
         "error": "Virhe",
         "userNotFound": "Käyttäjää ei löytynyt!",
-        "current-favorite-restaurant": "Ei valittua suosikkiravintolaa"
+        "current-favorite-restaurant": "Ei valittua suosikkiravintolaa",
+        "daily-menu": "Päivän ruokalista",
+        "weekly-menu": "Viikon ruokalista",
+        "search-title": "Etsi ravintoloita",
+        "search-label": "Etsi ravintoloita",
+        "search-placeholder": "Hae ravintoloita..."
     }
 }

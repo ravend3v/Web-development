@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize the map
     initializeMap();
 
+    // DOM elements
     const restaurantList = document.getElementById('restaurants');
     const cityFilter = document.getElementById('city-filter');
     const providerFilter = document.getElementById('provider-filter');
@@ -14,19 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
+    // Render user actions (login/logout/profile buttons)
     function renderUserActions() {
         userActions.innerHTML = '';
 
         if (token && currentUser) {
-            // Profile Button
             const profileButton = document.createElement('button');
             profileButton.textContent = `Profiilisivu (${currentUser.username})`;
             profileButton.addEventListener('click', () => {
                 window.location.href = 'templates/profile.html';
             });
-            userActions.appendChild(profileButton);
 
-            // Logout Button
             const logoutButton = document.createElement('button');
             logoutButton.textContent = 'Kirjaudu ulos';
             logoutButton.addEventListener('click', () => {
@@ -35,14 +34,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.removeItem('isLoggedIn');
                 window.location.reload();
             });
+
+            userActions.appendChild(profileButton);
             userActions.appendChild(logoutButton);
         } else {
-            // Login Button
             const loginButton = document.createElement('button');
             loginButton.textContent = 'Kirjaudu sisään';
             loginButton.addEventListener('click', () => {
                 window.location.href = 'templates/login.html';
             });
+
             userActions.appendChild(loginButton);
         }
     }
@@ -51,23 +52,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let restaurants = [];
 
-    // Populate the city and provider filters
+    // Populate city and provider filter dropdowns
     async function populateFilterOptions(restaurants) {
-        const cityFilter = document.getElementById('city-filter');
-        const providerFilter = document.getElementById('provider-filter');
-
-        // Clear existing options
         cityFilter.innerHTML = '';
         providerFilter.innerHTML = '';
 
         try {
-            // Translate "All" option
             const language = localStorage.getItem('language') || 'en';
             const translations = await loadTranslations(language);
             const allCitiesText = translations['all-cities'] || 'All Cities';
             const allProvidersText = translations['all-providers'] || 'All Providers';
 
-            // Add "All" option to both dropdowns
             const allCityOption = document.createElement('option');
             allCityOption.value = '';
             allCityOption.textContent = allCitiesText;
@@ -78,11 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
             allProviderOption.textContent = allProvidersText;
             providerFilter.appendChild(allProviderOption);
 
-            // Extract unique cities and providers
             const cities = [...new Set(restaurants.map(restaurant => restaurant.city))];
             const providers = [...new Set(restaurants.map(restaurant => restaurant.company))];
 
-            // Populate city dropdown
             cities.forEach(city => {
                 const option = document.createElement('option');
                 option.value = city.toLowerCase();
@@ -90,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 cityFilter.appendChild(option);
             });
 
-            // Populate provider dropdown
             providers.forEach(provider => {
                 const option = document.createElement('option');
                 option.value = provider.toLowerCase();
@@ -102,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Fetch restaurants from the API
+    // Fetch restaurant data from the API
     async function fetchRestaurants() {
         try {
             const response = await fetch('https://media2.edu.metropolia.fi/restaurant/api/v1/restaurants');
@@ -111,37 +103,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
             restaurants = Array.isArray(data) ? data : data.restaurants || [];
             displayRestaurants(restaurants);
-            plotRestaurantsOnMap(restaurants); // Use the function to plot restaurants on the map
-            await populateFilterOptions(restaurants); // Ensure this completes before proceeding
+            plotRestaurantsOnMap(restaurants);
+            await populateFilterOptions(restaurants);
         } catch (error) {
             console.error(error.message);
         }
     }
 
+    // Display restaurants in the list
     function displayRestaurants(restaurants) {
         restaurantList.innerHTML = '';
-        restaurants.forEach(restaurant => {
-            const li = document.createElement('li');
-            li.textContent = `${restaurant.name} (${restaurant.city}, ${restaurant.company})`;
+        const language = localStorage.getItem('language') || 'en';
 
-            // Daily Menu Button
-            const dailyMenuButton = document.createElement('button');
-            dailyMenuButton.textContent = 'Päivän ruokalista';
-            dailyMenuButton.addEventListener('click', () => fetchMenu(restaurant._id, 'daily'));
+        loadTranslations(language).then(translations => {
+            restaurants.forEach(restaurant => {
+                const li = document.createElement('li');
+                li.textContent = `${restaurant.name} (${restaurant.city}, ${restaurant.company})`;
 
-            // Weekly Menu Button
-            const weeklyMenuButton = document.createElement('button');
-            weeklyMenuButton.textContent = 'Viikon ruokalista';
-            weeklyMenuButton.addEventListener('click', () => fetchMenu(restaurant._id, 'weekly'));
+                const dailyMenuButton = document.createElement('button');
+                dailyMenuButton.textContent = translations['daily-menu'] || 'Daily Menu';
+                dailyMenuButton.addEventListener('click', () => fetchMenu(restaurant._id, 'daily'));
 
-            li.appendChild(dailyMenuButton);
-            li.appendChild(weeklyMenuButton);
-            restaurantList.appendChild(li);
+                const weeklyMenuButton = document.createElement('button');
+                weeklyMenuButton.textContent = translations['weekly-menu'] || 'Weekly Menu';
+                weeklyMenuButton.addEventListener('click', () => fetchMenu(restaurant._id, 'weekly'));
+
+                li.appendChild(dailyMenuButton);
+                li.appendChild(weeklyMenuButton);
+                restaurantList.appendChild(li);
+            });
+        }).catch(error => {
+            console.error('Translation error:', error);
         });
     }
 
     const API_BASE_URL = 'https://media2.edu.metropolia.fi/restaurant/api/v1/restaurants';
 
+    // Fetch menu data (daily or weekly) for a specific restaurant
     async function fetchMenu(restaurantId, type) {
         const language = localStorage.getItem('language') || 'en';
         const endpoint = type === 'daily'
@@ -162,18 +160,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
 
-            // Check if the menu contains a placeholder message like "Restaurant closed"
             if (type === 'daily' && data.courses.length === 1 && data.courses[0].name.toLowerCase().includes('closed')) {
                 displayErrorMessage(data.courses[0].name);
                 return;
             }
 
             displayMenu(data, type);
-        } catch (error) {
+        } catch {
             displayErrorMessage('An unexpected error occurred while fetching the menu.');
         }
     }
 
+    // Display menu data in a modal
     function displayMenu(menuData, type) {
         const menuModal = document.getElementById('menu-modal');
         const menuContent = document.getElementById('menu-content');
@@ -206,24 +204,25 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Ensure the modal is displayed
         menuModal.classList.remove('hidden');
-        document.getElementById('map').style.pointerEvents = 'none'; // Disable map interactions
+        document.getElementById('map').style.pointerEvents = 'none';
     }
 
+    // Display error messages in the modal
     function displayErrorMessage(message) {
         const menuModal = document.getElementById('menu-modal');
         const menuContent = document.getElementById('menu-content');
         menuContent.innerHTML = `<p style="color: red; text-align: center;">${message}</p>`;
         menuModal.classList.remove('hidden');
-        document.getElementById('map').style.pointerEvents = 'none'; // Disable map interactions
+        document.getElementById('map').style.pointerEvents = 'none';
     }
 
     document.getElementById('close-menu-modal').addEventListener('click', () => {
         document.getElementById('menu-modal').classList.add('hidden');
-        document.getElementById('map').style.pointerEvents = 'auto'; // Re-enable map interactions
+        document.getElementById('map').style.pointerEvents = 'auto';
     });
 
+    // Filter restaurants based on city and provider
     function filterRestaurants() {
         const city = cityFilter.value.toLowerCase();
         const provider = providerFilter.value.toLowerCase();
@@ -234,9 +233,10 @@ document.addEventListener('DOMContentLoaded', () => {
         );
 
         displayRestaurants(filteredRestaurants);
-        plotRestaurantsOnMap(filteredRestaurants); // Update the map with filtered restaurants
+        plotRestaurantsOnMap(filteredRestaurants);
     }
 
+    // Search restaurants by name, city, or provider
     function searchRestaurants() {
         const searchTerm = searchInput.value.toLowerCase();
         const filteredRestaurants = restaurants.filter(restaurant =>
@@ -246,13 +246,21 @@ document.addEventListener('DOMContentLoaded', () => {
         );
 
         displayRestaurants(filteredRestaurants);
-        plotRestaurantsOnMap(filteredRestaurants); // Update the map with search results
+        plotRestaurantsOnMap(filteredRestaurants);
     }
 
     applyFiltersButton.addEventListener('click', filterRestaurants);
     searchInput.addEventListener('input', searchRestaurants);
 
-    // Highlight the nearest restaurant after fetching data
+    // Update translations when the language changes
+    document.getElementById('language-selector').addEventListener('change', (event) => {
+        const selectedLanguage = event.target.value;
+        localStorage.setItem('language', selectedLanguage);
+        displayRestaurants(restaurants); // Re-render restaurants with updated translations
+        populateFilterOptions(restaurants); // Update filter options with new translations
+    });
+
+    // Fetch restaurants and highlight the nearest one
     fetchRestaurants().then(() => {
         highlightNearestRestaurant(restaurants);
     });

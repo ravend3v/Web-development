@@ -1,29 +1,15 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+main {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-}
-
-header {
-    background-color: #0073e6;
-    color: white;
-    display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: center;
     padding: 20px;
-}
-
-header h1 {
-    margin: 0;
-    flex: 1;
-    text-align: center;
 }
 
 #home-button {
     margin-right: 20px;
+    margin-top: 10px;
 }
 
 #home-button {
@@ -43,27 +29,6 @@ header h1 {
     color: white;
 }
 
-/* Style for the language selector */
-#language-selector {
-    padding: 5px 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-    cursor: pointer;
-}
-
-#language-selector:hover {
-    background-color: #005bb5;
-    color: white;
-}
-
-#language-selector:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
 #favorite-restaurant {
     padding: 5px 10px;
     font-size: 14px;
@@ -80,14 +45,7 @@ header h1 {
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
+
 
 #profile-cards {
     display: flex;
@@ -160,6 +118,3 @@ main {
     border-color: #007bff;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
-
-
-
