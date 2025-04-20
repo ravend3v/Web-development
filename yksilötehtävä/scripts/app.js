@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const providerFilter = document.getElementById('provider-filter');
     const applyFiltersButton = document.getElementById('apply-filters');
     const userActions = document.getElementById('user-actions');
+    const searchInput = document.getElementById('restaurant-search-input');
     const token = localStorage.getItem('token');
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
@@ -122,9 +123,106 @@ document.addEventListener('DOMContentLoaded', () => {
         restaurants.forEach(restaurant => {
             const li = document.createElement('li');
             li.textContent = `${restaurant.name} (${restaurant.city}, ${restaurant.company})`;
+
+            // Daily Menu Button
+            const dailyMenuButton = document.createElement('button');
+            dailyMenuButton.textContent = 'Päivän ruokalista';
+            dailyMenuButton.addEventListener('click', () => fetchMenu(restaurant._id, 'daily'));
+
+            // Weekly Menu Button
+            const weeklyMenuButton = document.createElement('button');
+            weeklyMenuButton.textContent = 'Viikon ruokalista';
+            weeklyMenuButton.addEventListener('click', () => fetchMenu(restaurant._id, 'weekly'));
+
+            li.appendChild(dailyMenuButton);
+            li.appendChild(weeklyMenuButton);
             restaurantList.appendChild(li);
         });
     }
+
+    const API_BASE_URL = 'https://media2.edu.metropolia.fi/restaurant/api/v1/restaurants';
+
+    async function fetchMenu(restaurantId, type) {
+        const language = localStorage.getItem('language') || 'en';
+        const endpoint = type === 'daily'
+            ? `${API_BASE_URL}/daily/${restaurantId}/${language}`
+            : `${API_BASE_URL}/weekly/${restaurantId}/${language}`;
+
+        try {
+            const response = await fetch(endpoint);
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    displayErrorMessage(`Menu not found for the selected restaurant (ID: ${restaurantId}).`);
+                } else {
+                    displayErrorMessage(`Failed to fetch menu. Status Code: ${response.status}`);
+                }
+                return;
+            }
+
+            const data = await response.json();
+
+            // Check if the menu contains a placeholder message like "Restaurant closed"
+            if (type === 'daily' && data.courses.length === 1 && data.courses[0].name.toLowerCase().includes('closed')) {
+                displayErrorMessage(data.courses[0].name);
+                return;
+            }
+
+            displayMenu(data, type);
+        } catch (error) {
+            displayErrorMessage('An unexpected error occurred while fetching the menu.');
+        }
+    }
+
+    function displayMenu(menuData, type) {
+        const menuModal = document.getElementById('menu-modal');
+        const menuContent = document.getElementById('menu-content');
+        menuContent.innerHTML = '';
+
+        if (type === 'daily') {
+            if (menuData.courses && menuData.courses.length > 0) {
+                menuData.courses.forEach(course => {
+                    const courseElement = document.createElement('div');
+                    courseElement.textContent = `${course.name} - ${course.price} (${course.diets})`;
+                    menuContent.appendChild(courseElement);
+                });
+            } else {
+                menuContent.innerHTML = '<p>No courses available for today.</p>';
+            }
+        } else if (type === 'weekly') {
+            if (menuData.days && menuData.days.length > 0) {
+                menuData.days.forEach(day => {
+                    const dayElement = document.createElement('div');
+                    dayElement.innerHTML = `<strong>${day.date}</strong>`;
+                    day.courses.forEach(course => {
+                        const courseElement = document.createElement('div');
+                        courseElement.textContent = `${course.name} - ${course.price} (${course.diets})`;
+                        dayElement.appendChild(courseElement);
+                    });
+                    menuContent.appendChild(dayElement);
+                });
+            } else {
+                menuContent.innerHTML = '<p>No weekly menu available.</p>';
+            }
+        }
+
+        // Ensure the modal is displayed
+        menuModal.classList.remove('hidden');
+        document.getElementById('map').style.pointerEvents = 'none'; // Disable map interactions
+    }
+
+    function displayErrorMessage(message) {
+        const menuModal = document.getElementById('menu-modal');
+        const menuContent = document.getElementById('menu-content');
+        menuContent.innerHTML = `<p style="color: red; text-align: center;">${message}</p>`;
+        menuModal.classList.remove('hidden');
+        document.getElementById('map').style.pointerEvents = 'none'; // Disable map interactions
+    }
+
+    document.getElementById('close-menu-modal').addEventListener('click', () => {
+        document.getElementById('menu-modal').classList.add('hidden');
+        document.getElementById('map').style.pointerEvents = 'auto'; // Re-enable map interactions
+    });
 
     function filterRestaurants() {
         const city = cityFilter.value.toLowerCase();
@@ -139,7 +237,20 @@ document.addEventListener('DOMContentLoaded', () => {
         plotRestaurantsOnMap(filteredRestaurants); // Update the map with filtered restaurants
     }
 
+    function searchRestaurants() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredRestaurants = restaurants.filter(restaurant =>
+            restaurant.name.toLowerCase().includes(searchTerm) ||
+            restaurant.city.toLowerCase().includes(searchTerm) ||
+            restaurant.company.toLowerCase().includes(searchTerm)
+        );
+
+        displayRestaurants(filteredRestaurants);
+        plotRestaurantsOnMap(filteredRestaurants); // Update the map with search results
+    }
+
     applyFiltersButton.addEventListener('click', filterRestaurants);
+    searchInput.addEventListener('input', searchRestaurants);
 
     // Highlight the nearest restaurant after fetching data
     fetchRestaurants().then(() => {

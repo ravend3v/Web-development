@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
     const favoriteRestaurantDropdown = document.getElementById('favorite-restaurant');
     const updateProfileButton = document.getElementById('update-profile-button');
+    const usernameInput = document.getElementById('username-input');
+    const usernameDisplay = document.getElementById('username');
 
     // Load the current avatar (if available)
     function loadAvatar() {
@@ -14,6 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             profilePicturePreview.src = '../public/images/default-avatar.png';
             profilePicturePreview.style.display = 'block';
+        }
+    }
+
+    // Load the current username (if available)
+    function loadUsername() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser && currentUser.username) {
+            usernameDisplay.textContent = currentUser.username;
+            usernameInput.value = currentUser.username;
+        } else {
+            usernameDisplay.textContent = 'Ei käyttäjänimeä';
         }
     }
 
@@ -89,17 +102,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Update the user's profile
+    // Update the user's profile (username and favorite restaurant)
     updateProfileButton.addEventListener('click', async () => {
         const selectedRestaurantId = favoriteRestaurantDropdown.value;
         const selectedRestaurantName = favoriteRestaurantDropdown.options[favoriteRestaurantDropdown.selectedIndex]?.text;
+        const updatedUsername = usernameInput.value.trim();
 
-        if (!selectedRestaurantId) {
-            alert('Valitse suosikkiravintola ennen päivittämistä.');
+        if (!selectedRestaurantId || !updatedUsername) {
+            alert('Täytä käyttäjänimi ja valitse suosikkiravintola ennen päivittämistä.');
             return;
         }
 
         const updatedData = {
+            username: updatedUsername,
             favouriteRestaurant: selectedRestaurantId
         };
 
@@ -118,10 +133,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(errorData.message || 'Tietojen päivittäminen epäonnistui.');
             }
 
-            // Update the local storage and UI with the new favorite restaurant
+            // Update the local storage and UI with the new data
             const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            currentUser.username = updatedUsername;
             currentUser.favouriteRestaurantName = selectedRestaurantName;
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+            usernameDisplay.textContent = updatedUsername;
             document.getElementById('current-favorite-restaurant').textContent = selectedRestaurantName;
 
             alert('Profiilisi on päivitetty onnistuneesti.');
@@ -131,8 +149,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Load the avatar, favorite restaurant, and populate restaurants on page load
+    // Load the avatar, username, favorite restaurant, and populate restaurants on page load
     loadAvatar();
+    loadUsername();
     loadFavoriteRestaurant();
     populateRestaurants();
 });

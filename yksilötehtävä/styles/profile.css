@@ -145,5 +145,21 @@ main {
     background-color: #005bb5;
 }
 
+#username-input {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 10px;
+    box-sizing: border-box;
+}
+
+#username-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
 
 

@@ -1,85 +1,63 @@
 let map; // Map instance
-let userLocation = null;
 
-// Add a "Locate Me" button to the map
-function addLocateMeButton() {
-    const locateMeButton = L.control({ position: 'topright' });
+// Use local paths for marker icons
+const redIcon = L.icon({
+    iconUrl: './assets/images/marker-icon-red.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
 
-    locateMeButton.onAdd = function () {
-        const button = L.DomUtil.create('button', 'locate-me-button');
-        button.textContent = 'Sijaintini';
-        button.title = 'Siirry sijaintiisi';
-        button.style.cursor = 'pointer';
-        button.style.padding = '10px';
-        button.style.backgroundColor = '#0073e6';
-        button.style.color = 'white';
-        button.style.border = 'none';
-        button.style.borderRadius = '5px';
-        button.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
-        button.addEventListener('click', () => {
-            if (userLocation) {
-                map.setView(userLocation, 14);
-            } else {
-                alert('Sijaintia ei ole saatavilla. Salli sijainnin käyttö selaimen asetuksista.');
-            }
-        });
-        return button;
-    };
-
-    locateMeButton.addTo(map);
-}
+const greenIcon = L.icon({
+    iconUrl: './assets/images/marker-icon-green.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
 
 // Initialize the map
-function initializeMap() {
-    map = L.map('map').setView([60.1699, 24.9384], 12); // Default to Helsinki
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+export function initializeMap() {
+    map = L.map('map').setView([60.1699, 24.9384], 13); // Example coordinates for Helsinki
 
-    addLocateMeButton();
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
 }
 
 // Plot restaurants on the map
-function plotRestaurantsOnMap(restaurants) {
+export function plotRestaurantsOnMap(restaurants) {
     restaurants.forEach(restaurant => {
-        const [longitude, latitude] = restaurant.location.coordinates; // Extract coordinates
+        const [longitude, latitude] = restaurant.location.coordinates;
         const marker = L.marker([latitude, longitude]).addTo(map);
-        marker.bindPopup(`<b>${restaurant.name}</b><br>${restaurant.city}<br>${restaurant.company}`); // Add a meaningful popup
+        marker.bindPopup(`<b>${restaurant.name}</b><br>${restaurant.city}<br>${restaurant.company}`);
     });
 }
 
 // Highlight the nearest restaurant
-function highlightNearestRestaurant(restaurants) {
+export function highlightNearestRestaurant(restaurants) {
     if (!navigator.geolocation) {
         alert('Selaimesi ei tue sijainnin hakemista.');
         return;
     }
 
     navigator.geolocation.getCurrentPosition(position => {
-        userLocation = [position.coords.latitude, position.coords.longitude];
+        const userLocation = [position.coords.latitude, position.coords.longitude];
         const nearest = findNearestRestaurant(userLocation, restaurants);
 
         if (nearest) {
-            // Add a marker for the user's location
-            const userMarker = L.marker(userLocation, { icon: L.icon({
-                iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-red.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41]
-            }) }).addTo(map);
-            userMarker.bindPopup('Sinun sijaintisi').openPopup(); // Add a meaningful popup for the user's location
-
-            // Highlight the nearest restaurant
+            // Highlight the nearest restaurant by adding a CSS class
             const [nearestLongitude, nearestLatitude] = nearest.location.coordinates;
-            const nearestMarker = L.marker([nearestLatitude, nearestLongitude], { icon: L.icon({
-                iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-green.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41]
-            }) }).addTo(map);
+            const nearestMarker = L.marker([nearestLatitude, nearestLongitude]).addTo(map);
             nearestMarker.bindPopup(`<b>Lähin ravintola:</b><br>${nearest.name}`).openPopup();
 
-            // Adjust the map view to include both the user and the nearest restaurant
-            const bounds = L.latLngBounds([userLocation, [nearestLatitude, nearestLongitude]]);
-            map.fitBounds(bounds, { padding: [50, 50] });
+            // Add the CSS class to change the marker color
+            nearestMarker._icon.classList.add('huechange');
+
+            // Adjust the map view to focus on the nearest restaurant
+            map.setView([nearestLatitude, nearestLongitude], 14);
         }
     }, error => {
         switch (error.code) {
@@ -119,6 +97,3 @@ function findNearestRestaurant(location, restaurants) {
 
     return nearest;
 }
-
-// Export functions for use in other modules
-export { initializeMap, plotRestaurantsOnMap, highlightNearestRestaurant };

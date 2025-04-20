@@ -7,6 +7,7 @@
     <title>Opiskelijaravintolat</title>
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="icon" href="public/images/favicon.ico" type="image/x-icon">
 
     <!-- Leaflet for the map functions -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -38,11 +39,27 @@
             <button data-translate="filter" id="apply-filters" aria-label="Apply Filters">Suodata</button>
         </section>
 
+        <!-- Restaurant Search Section -->
+        <section id="restaurant-search" aria-labelledby="search-title">
+            <h2 id="search-title" data-translate="search-title">Etsi ravintoloita</h2>
+            <label for="restaurant-search-input" class="sr-only" data-translate="search-label">Hae ravintoloita</label>
+            <input type="text" id="restaurant-search-input" placeholder="Hae ravintoloita..." aria-label="Search Restaurants">
+        </section>
+
         <!-- Restaurant List Section -->
         <section id="restaurant-list" aria-labelledby="restaurant-list-title">
             <h2 id="restaurant-list-title" data-translate="restaurants">Ravintolat</h2>
             <ul id="restaurants" role="list"></ul>
         </section>
+
+        <!-- Menu Modal -->
+        <div id="menu-modal" class="hidden" role="dialog" aria-labelledby="menu-modal-title">
+            <div class="modal-content">
+                <h2 id="menu-modal-title" data-translate="menu-title">Ruokalista</h2>
+                <button id="close-menu-modal" aria-label="Close Menu">X</button>
+                <div id="menu-content"></div>
+            </div>
+        </div>
 
         <!-- Map Section -->
         <section id="map-section" aria-labelledby="map-title">
@@ -54,7 +71,7 @@
         <p>&copy; 2025 Elias Ojala</p>
     </footer>
     <script type="module" src="scripts/app.js"></script>
-    <script src="scripts/map.js"></script>
+    <script type="module" src="scripts/map.js"></script>
     <script type="module" src="scripts/language.js"></script>
 </body>
 </html>
