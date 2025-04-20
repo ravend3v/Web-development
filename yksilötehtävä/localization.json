@@ -22,7 +22,8 @@
         "update-profile": "Update Profile",
         "profile-updated": "Profile updated successfully!",
         "error": "Error",
-        "userNotFound": "User not found!"
+        "userNotFound": "User not found!",
+        "current-favorite-restaurant": "No favorite restaurant selected"
     },
     "fi": {
         "welcome": "Tervetuloa",
@@ -47,6 +48,7 @@
         "update-profile": "Päivitä profiili",
         "profile-updated": "Profiili päivitetty onnistuneesti!",
         "error": "Virhe",
-        "userNotFound": "Käyttäjää ei löytynyt!"
+        "userNotFound": "Käyttäjää ei löytynyt!",
+        "current-favorite-restaurant": "Ei valittua suosikkiravintolaa"
     }
 }

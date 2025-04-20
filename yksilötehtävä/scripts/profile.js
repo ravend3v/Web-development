@@ -12,8 +12,19 @@ document.addEventListener('DOMContentLoaded', () => {
             profilePicturePreview.src = `https://media2.edu.metropolia.fi/uploads/${currentUser.avatar}`;
             profilePicturePreview.style.display = 'block';
         } else {
-            profilePicturePreview.src = '../public/images/default-avatar.png'; // Default avatar
+            profilePicturePreview.src = '../public/images/default-avatar.png';
             profilePicturePreview.style.display = 'block';
+        }
+    }
+
+    // Load the current favorite restaurant (if available)
+    function loadFavoriteRestaurant() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const currentFavoriteRestaurant = document.getElementById('current-favorite-restaurant');
+        if (currentUser && currentUser.favouriteRestaurantName) {
+            currentFavoriteRestaurant.textContent = currentUser.favouriteRestaurantName;
+        } else {
+            currentFavoriteRestaurant.textContent = 'Ei valittua suosikkiravintolaa';
         }
     }
 
@@ -82,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update the user's profile
     updateProfileButton.addEventListener('click', async () => {
         const selectedRestaurantId = favoriteRestaurantDropdown.value;
+        const selectedRestaurantName = favoriteRestaurantDropdown.options[favoriteRestaurantDropdown.selectedIndex]?.text;
 
         if (!selectedRestaurantId) {
             alert('Valitse suosikkiravintola ennen päivittämistä.');
@@ -107,6 +119,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(errorData.message || 'Tietojen päivittäminen epäonnistui.');
             }
 
+            // Update the local storage and UI with the new favorite restaurant
+            const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+            currentUser.favouriteRestaurantName = selectedRestaurantName;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            document.getElementById('current-favorite-restaurant').textContent = selectedRestaurantName;
+
             alert('Profiilisi on päivitetty onnistuneesti.');
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -114,7 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Load the avatar and populate restaurants on page load
+    // Load the avatar, favorite restaurant, and populate restaurants on page load
     loadAvatar();
+    loadFavoriteRestaurant();
     populateRestaurants();
 });

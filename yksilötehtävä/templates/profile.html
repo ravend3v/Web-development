@@ -30,12 +30,13 @@
             <!-- Username Card -->
             <div class="card" id="username-card">
                 <h2 data-translate="username">Käyttäjänimi</h2>
-                <p id="username"></p>
+                <p id="username" data-translate="username"></p>
             </div>
 
             <!-- Favorite Restaurant Card -->
             <div class="card" id="favorite-restaurant-card">
                 <h2 data-translate="favorite-restaurant">Suosikkiravintola</h2>
+                <p id="current-favorite-restaurant" style="font-style: italic; color: gray;" data-translate="current-favorite-restaurant">Ei valittua suosikkiravintolaa</p>
                 <select id="favorite-restaurant">
                     <option value="" disabled selected data-translate="select-restaurant">Valitse ravintola</option>
                     <!-- Options will be dynamically populated -->
@@ -48,6 +49,6 @@
         <p>&copy; 2025 Elias Ojala</p>
     </footer>
     <script src="../scripts/profile.js"></script>
-    <script src="../scripts/language.js"></script>
+    <script type="module" src="../scripts/language.js"></script>
 </body>
 </html>
