@@ -1,6 +1,10 @@
 import { loadTranslations } from "./language.js";
+import { initializeMap, plotRestaurantsOnMap, highlightNearestRestaurant } from "./map.js";
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize the map
+    initializeMap();
+
     const restaurantList = document.getElementById('restaurants');
     const cityFilter = document.getElementById('city-filter');
     const providerFilter = document.getElementById('provider-filter');
@@ -10,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
     function renderUserActions() {
-        userActions.innerHTML = ''; // Clear existing buttons
+        userActions.innerHTML = '';
 
         if (token && currentUser) {
             // Profile Button
@@ -45,73 +49,72 @@ document.addEventListener('DOMContentLoaded', () => {
     renderUserActions();
 
     let restaurants = [];
-    const map = L.map('map').setView([60.1699, 24.9384], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-    const markers = L.layerGroup().addTo(map);
 
     // Populate the city and provider filters
-    function populateFilterOptions(restaurants) {
+    async function populateFilterOptions(restaurants) {
         const cityFilter = document.getElementById('city-filter');
         const providerFilter = document.getElementById('provider-filter');
-    
+
         // Clear existing options
         cityFilter.innerHTML = '';
         providerFilter.innerHTML = '';
-    
-        // Add "All" option to both dropdowns
-        const allCityOption = document.createElement('option');
-        allCityOption.value = '';
-        allCityOption.setAttribute('data-translate', 'all-cities');
-        allCityOption.textContent = 'Kaikki';
-        cityFilter.appendChild(allCityOption);
-    
-        const allProviderOption = document.createElement('option');
-        allProviderOption.value = '';
-        allProviderOption.setAttribute('data-translate', 'all-providers');
-        allProviderOption.textContent = 'Kaikki';
-        providerFilter.appendChild(allProviderOption);
-    
-        // Extract unique cities and providers
-        const cities = [...new Set(restaurants.map(restaurant => restaurant.city))];
-        const providers = [...new Set(restaurants.map(restaurant => restaurant.company))];
-    
-        // Populate city dropdown
-        cities.forEach(city => {
-            const option = document.createElement('option');
-            option.value = city.toLowerCase();
-            option.textContent = city;
-            cityFilter.appendChild(option);
-        });
-    
-        // Populate provider dropdown
-        providers.forEach(provider => {
-            const option = document.createElement('option');
-            option.value = provider.toLowerCase();
-            option.textContent = provider;
-            providerFilter.appendChild(option);
-        });
-    
-        // Reapply translations after adding options
-        const defaultLanguage = localStorage.getItem('language') || 'en';
-        loadTranslations(defaultLanguage);
+
+        try {
+            // Translate "All" option
+            const language = localStorage.getItem('language') || 'en';
+            const translations = await loadTranslations(language);
+            const allCitiesText = translations['all-cities'] || 'All Cities';
+            const allProvidersText = translations['all-providers'] || 'All Providers';
+
+            // Add "All" option to both dropdowns
+            const allCityOption = document.createElement('option');
+            allCityOption.value = '';
+            allCityOption.textContent = allCitiesText;
+            cityFilter.appendChild(allCityOption);
+
+            const allProviderOption = document.createElement('option');
+            allProviderOption.value = '';
+            allProviderOption.textContent = allProvidersText;
+            providerFilter.appendChild(allProviderOption);
+
+            // Extract unique cities and providers
+            const cities = [...new Set(restaurants.map(restaurant => restaurant.city))];
+            const providers = [...new Set(restaurants.map(restaurant => restaurant.company))];
+
+            // Populate city dropdown
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city.toLowerCase();
+                option.textContent = city;
+                cityFilter.appendChild(option);
+            });
+
+            // Populate provider dropdown
+            providers.forEach(provider => {
+                const option = document.createElement('option');
+                option.value = provider.toLowerCase();
+                option.textContent = provider;
+                providerFilter.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Translation error:', error);
+        }
     }
 
     // Fetch restaurants from the API
-    function fetchRestaurants() {
-        fetch('https://media2.edu.metropolia.fi/restaurant/api/v1/restaurants')
-            .then(response => {
-                if (!response.ok) throw new Error('Virhe haettaessa ravintoloita: ' + response.statusText);
-                return response.json();
-            })
-            .then(data => {
-                restaurants = Array.isArray(data) ? data : data.restaurants || [];
-                displayRestaurants(restaurants);
-                displayMarkers(restaurants);
-                populateFilterOptions(restaurants);
-            })
-            .catch(error => console.error(error.message));
+    async function fetchRestaurants() {
+        try {
+            const response = await fetch('https://media2.edu.metropolia.fi/restaurant/api/v1/restaurants');
+            if (!response.ok) throw new Error('Virhe haettaessa ravintoloita: ' + response.statusText);
+            const data = await response.json();
+
+            restaurants = Array.isArray(data) ? data : data.restaurants || [];
+            displayRestaurants(restaurants);
+            plotRestaurantsOnMap(restaurants); // Use the function to plot restaurants on the map
+            await populateFilterOptions(restaurants); // Ensure this completes before proceeding
+        } catch (error) {
+            console.error(error.message);
+        }
     }
 
     function displayRestaurants(restaurants) {
@@ -120,18 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const li = document.createElement('li');
             li.textContent = `${restaurant.name} (${restaurant.city}, ${restaurant.company})`;
             restaurantList.appendChild(li);
-        });
-    }
-
-    function displayMarkers(restaurants) {
-        markers.clearLayers();
-        restaurants.forEach(restaurant => {
-            if (restaurant.location?.coordinates) {
-                const [longitude, latitude] = restaurant.location.coordinates;
-                const marker = L.marker([latitude, longitude])
-                    .bindPopup(`<b>${restaurant.name}</b><br>${restaurant.city}, ${restaurant.company}`);
-                markers.addLayer(marker);
-            }
         });
     }
 
@@ -145,9 +136,13 @@ document.addEventListener('DOMContentLoaded', () => {
         );
 
         displayRestaurants(filteredRestaurants);
-        displayMarkers(filteredRestaurants);
+        plotRestaurantsOnMap(filteredRestaurants); // Update the map with filtered restaurants
     }
 
     applyFiltersButton.addEventListener('click', filterRestaurants);
-    fetchRestaurants();
+
+    // Highlight the nearest restaurant after fetching data
+    fetchRestaurants().then(() => {
+        highlightNearestRestaurant(restaurants);
+    });
 });

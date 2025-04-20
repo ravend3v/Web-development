@@ -36,7 +36,10 @@
             <!-- Favorite Restaurant Card -->
             <div class="card" id="favorite-restaurant-card">
                 <h2 data-translate="favorite-restaurant">Suosikkiravintola</h2>
-                <input type="text" id="favorite-restaurant" placeholder="Lisää suosikkiravintola">
+                <select id="favorite-restaurant">
+                    <option value="" disabled selected data-translate="select-restaurant">Valitse ravintola</option>
+                    <!-- Options will be dynamically populated -->
+                </select>
             </div>
         </section>
         <button data-translate="update-profile" id="update-profile-button">Päivitä tiedot</button>

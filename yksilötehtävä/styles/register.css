@@ -91,3 +91,27 @@ footer {
     padding: 10px 0;
     background-color: #f4f4f4;
 }
+
+/* Center the form container */
+#register-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    background-color: #f4f4f4; /* Light background for the form container */
+}
+
+/* Adjust form styles for smaller screens */
+@media (max-width: 480px) {
+    form {
+        padding: 15px;
+    }
+
+    form input {
+        font-size: 14px;
+    }
+
+    form button {
+        font-size: 14px;
+    }
+}

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Opiskelijaravintolat - Löydä opiskelijaravintolat helposti kartalta ja listalta.">
     <title>Opiskelijaravintolat</title>
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -11,44 +12,45 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
-    <header>
+    <header role="banner">
         <h1 data-translate="header-title">Opiskelijaravintolat</h1>
-        <div id="user-actions">
+        <div id="user-actions" aria-label="User Actions">
             <!-- Buttons will be dynamically added here -->
         </div>
-        <select id="language-selector">
+        <label for="language-selector" class="sr-only">Valitse kieli</label>
+        <select id="language-selector" aria-label="Language Selector">
             <option value="en">En</option>
             <option value="fi">Fi</option>
         </select>
     </header>
-    <main>
+    <main role="main">
         <!-- Filter Section -->
-        <section id="filter-section">
-            <h2 data-translate="filter-title">Suodata ravintoloita</h2>
+        <section id="filter-section" aria-labelledby="filter-title">
+            <h2 id="filter-title" data-translate="filter-title">Suodata ravintoloita</h2>
             <label data-translate="city" for="city-filter">Kaupunki:</label>
-            <select data-translate="city-input" id="city-filter">
+            <select data-translate="city-input" id="city-filter" aria-label="City Filter">
                 <option data-translate="all-cities" value="">Kaikki</option>
             </select>
             <label data-translate="provider" for="provider-filter">Palveluntarjoaja:</label>
-            <select data-translate="provider-input" id="provider-filter">
+            <select data-translate="provider-input" id="provider-filter" aria-label="Provider Filter">
                 <option data-translate="all-providers" value="">Kaikki</option>
             </select>
-            <button data-translate="filter" id="apply-filters">Suodata</button>
+            <button data-translate="filter" id="apply-filters" aria-label="Apply Filters">Suodata</button>
         </section>
 
         <!-- Restaurant List Section -->
-        <section id="restaurant-list">
-            <h2 data-translate="restaurants">Ravintolat</h2>
-            <ul id="restaurants"></ul>
+        <section id="restaurant-list" aria-labelledby="restaurant-list-title">
+            <h2 id="restaurant-list-title" data-translate="restaurants">Ravintolat</h2>
+            <ul id="restaurants" role="list"></ul>
         </section>
 
         <!-- Map Section -->
-        <section id="map-section">
-            <h2 data-translate="map">Kartta</h2>
-            <div id="map" style="width: 100%; height: 400px;"></div>
+        <section id="map-section" aria-labelledby="map-title">
+            <h2 id="map-title" data-translate="map">Kartta</h2>
+            <div id="map" style="width: 100%; height: 400px;" role="application" aria-label="Map"></div>
         </section>
     </main>
-    <footer>
+    <footer role="contentinfo">
         <p>&copy; 2025 Elias Ojala</p>
     </footer>
     <script type="module" src="scripts/app.js"></script>

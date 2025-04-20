@@ -7,19 +7,21 @@
     <link rel="stylesheet" href="../styles/register.css">
 </head>
 <body>
-    <section id="register-section">
-        <h2>Rekisteröidy</h2>
-        <form id="register-form">
-            <label for="new-username">Käyttäjänimi:</label>
-            <input type="text" id="new-username" required>
-            <label for="new-email">Sähköposti:</label>
-            <input type="email" id="new-email" required>
-            <label for="new-password">Salasana:</label>
-            <input type="password" id="new-password" required>
-            <button type="submit">Rekisteröidy</button>
-            <p><a href="login.html">Kirjaudu sisään</a></p>
-        </form>
-    </section>
+    <div id="register-form-container">
+        <section id="register-section" role="form" aria-labelledby="register-title">
+            <h2 id="register-title">Rekisteröidy</h2>
+            <form id="register-form">
+                <label for="new-username">Käyttäjänimi:</label>
+                <input type="text" id="new-username" required aria-required="true" aria-label="Käyttäjänimi">
+                <label for="new-email">Sähköposti:</label>
+                <input type="email" id="new-email" required aria-required="true" aria-label="Sähköposti">
+                <label for="new-password">Salasana:</label>
+                <input type="password" id="new-password" required aria-required="true" aria-label="Salasana">
+                <button type="submit" aria-label="Rekisteröidy">Rekisteröidy</button>
+                <p><a href="login.html" aria-label="Kirjaudu sisään">Kirjaudu sisään</a></p>
+            </form>
+        </section>
+    </div>
     <script src="../scripts/register.js"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: #0073e6;
+    background-color: #005bb5; /* Darker blue for better contrast */
     color: white;
     flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
@@ -21,6 +21,7 @@ header h1 {
     margin: 0;
     text-align: center;
     flex: 1;
+    color: #ffffff; /* Ensure white text on dark background */
 }
 
 /* User actions container */
@@ -56,6 +57,11 @@ header h1 {
     border-radius: 5px;
     background-color: #fff;
     cursor: pointer;
+}
+
+#language-selector:hover {
+    background-color: #005bb5;
+    color: white;
 }
 
 #language-selector:focus {
@@ -158,11 +164,60 @@ main {
     border-radius: 5px;
 }
 
+/* Custom marker styling */
+.custom-marker {
+    width: 30px;
+    height: 30px;
+    background-color: #ff5722; /* Bright orange for visibility */
+    border: 2px solid #ffffff; /* White border for contrast */
+    border-radius: 50%; /* Circular marker */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+    position: absolute;
+    transform: translate(-50%, -50%); /* Center the marker */
+}
+
+.custom-marker::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 10px solid #ff5722; /* Triangle pointing down */
+    transform: translateX(-50%);
+}
+
 /* Footer styling */
 footer {
     text-align: center;
     padding: 1rem 0;
     background: #f4f4f4;
+}
+
+/* Screen reader-only class */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Style for the "Locate Me" button */
+.locate-me-button {
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.locate-me-button:hover {
+    background-color: #005bb5;
 }
 
 /* Responsive styles */
@@ -179,10 +234,17 @@ footer {
 
     #filter-section {
         padding: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
 
     #restaurant-list {
         max-height: 200px; /* Adjust height for smaller screens */
+    }
+
+    #restaurant-list ul {
+        font-size: 14px; /* Adjust font size for smaller screens */
     }
 
     #map {
@@ -204,6 +266,8 @@ footer {
         font-size: 12px;
     }
 
+    #filter-section label,
+    #filter-section select,
     #filter-section button {
         font-size: 12px;
     }

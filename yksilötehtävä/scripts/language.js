@@ -6,9 +6,10 @@ export async function loadTranslations(language) {
             throw new Error(`Failed to load translations: ${response.statusText}`);
         }
         const translations = await response.json();
-        applyTranslations(translations[language]);
+        return translations[language]; // Return the translations for the selected language
     } catch (error) {
         console.error('Error loading translations:', error);
+        return {}; // Return an empty object on error
     }
 }
 
@@ -24,18 +25,20 @@ function applyTranslations(translations) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const languageSelector = document.getElementById('language-selector');
     const defaultLanguage = localStorage.getItem('language') || 'en';
 
     // Change language
-    languageSelector.addEventListener('change', (event) => {
+    languageSelector.addEventListener('change', async (event) => {
         const selectedLanguage = event.target.value;
         localStorage.setItem('language', selectedLanguage);
-        loadTranslations(selectedLanguage);
+        const translations = await loadTranslations(selectedLanguage);
+        applyTranslations(translations);
     });
 
     // Initialize with default language
     languageSelector.value = defaultLanguage;
-    loadTranslations(defaultLanguage);
+    const translations = await loadTranslations(defaultLanguage);
+    applyTranslations(translations);
 });
