@@ -1,0 +1,3 @@
+img.huechange {
+    filter: hue-rotate(0deg) saturate(5) brightness(1.2);
+}

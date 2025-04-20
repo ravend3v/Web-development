@@ -1,8 +1,8 @@
-let map; 
+let map; // Map instance
 
-// Initializes the map with a default view and tile layer
+// Initialize the map
 export function initializeMap() {
-    map = L.map('map').setView([60.1699, 24.9384], 13); 
+    map = L.map('map').setView([60.1699, 24.9384], 13); // Example coordinates for Helsinki
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -10,7 +10,7 @@ export function initializeMap() {
     }).addTo(map);
 }
 
-// Plots a list of restaurants on the map using their coordinates
+// Plot restaurants on the map
 export function plotRestaurantsOnMap(restaurants) {
     restaurants.forEach(restaurant => {
         const [longitude, latitude] = restaurant.location.coordinates;
@@ -19,7 +19,7 @@ export function plotRestaurantsOnMap(restaurants) {
     });
 }
 
-// Highlights the nearest restaurant to the user's current location
+// Highlight the nearest restaurant
 export function highlightNearestRestaurant(restaurants) {
     if (!navigator.geolocation) {
         alert('Selaimesi ei tue sijainnin hakemista.');
@@ -34,7 +34,11 @@ export function highlightNearestRestaurant(restaurants) {
             const [nearestLongitude, nearestLatitude] = nearest.location.coordinates;
             const nearestMarker = L.marker([nearestLatitude, nearestLongitude]).addTo(map);
             nearestMarker.bindPopup(`<b>Lähin ravintola:</b><br>${nearest.name}`).openPopup();
+
+            // Add the CSS class to change the marker color
             nearestMarker._icon.classList.add('huechange');
+
+            // Adjust the map view to focus on the nearest restaurant
             map.setView([nearestLatitude, nearestLongitude], 14);
         }
     }, error => {
@@ -55,7 +59,7 @@ export function highlightNearestRestaurant(restaurants) {
     });
 }
 
-// Finds the nearest restaurant to a given location using Euclidean distance
+// Find the nearest restaurant
 function findNearestRestaurant(location, restaurants) {
     let nearest = null;
     let minDistance = Infinity;
