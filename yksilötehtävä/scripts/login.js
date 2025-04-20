@@ -1,45 +1,37 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
 
-    // Hash a password using the crypto.subtle API
-    async function hashPassword(password) {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(password);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        return Array.from(new Uint8Array(hashBuffer))
-            .map(byte => byte.toString(16).padStart(2, '0'))
-            .join('');
-    }
-
-    // Handle login
     loginForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
-        const hashedPassword = await hashPassword(password);
 
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const user = users.find(user => user.username === username && user.password === hashedPassword);
+        try {
+            const response = await fetch('https://media2.edu.metropolia.fi/restaurant/api/v1/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
 
-        // If user is found login
-        if (user) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Kirjautuminen onnistui!',
-                text: 'Tervetuloa takaisin!',
-                confirmButtonText: 'Jatka'
-            }).then(() => {
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                window.location.href = '../index.html';
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Virheellinen käyttäjänimi tai salasana',
-                text: 'Yritä uudelleen.',
-                confirmButtonText: 'OK'
-            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Kirjautuminen epäonnistui.');
+            }
+
+            const data = await response.json();
+            console.log('Login successful:', data); // Debugging
+
+            // Save the token, user data, and isLoggedIn flag in localStorage
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('currentUser', JSON.stringify(data.data));
+            localStorage.setItem('isLoggedIn', 'true');
+
+            // Redirect to the index.html page
+            alert(`Kirjautuminen onnistui! Tervetuloa takaisin, ${data.data.username}!`);
+            window.location.href = '../index.html';
+        } catch (error) {
+            console.error('Error during login:', error); // Debugging
+            alert(`Virhe: ${error.message}`);
         }
     });
 });

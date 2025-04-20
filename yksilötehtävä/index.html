@@ -9,9 +9,6 @@
 
     <!-- Leaflet for the map functions -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <!-- Sweet alerts for nicer notifications -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header>
@@ -27,30 +24,30 @@
     <main>
         <!-- Filter Section -->
         <section id="filter-section">
-            <h2>Suodata ravintoloita</h2>
-            <label for="city-filter">Kaupunki:</label>
-            <input type="text" id="city-filter" placeholder="Kirjoita kaupunki">
-            <label for="provider-filter">Palveluntarjoaja:</label>
-            <input type="text" id="provider-filter" placeholder="Kirjoita palveluntarjoaja">
-            <button id="apply-filters">Suodata</button>
+            <h2 data-translate="filter-title">Suodata ravintoloita</h2>
+            <label data-translate="city" for="city-filter">Kaupunki:</label>
+            <input data-translate="city-input" type="text" id="city-filter" placeholder="Kirjoita kaupunki">
+            <label data-translate="provider" for="provider-filter">Palveluntarjoaja:</label>
+            <input data-translate="provider-input" type="text" id="provider-filter" placeholder="Kirjoita palveluntarjoaja">
+            <button data-translate="filter" id="apply-filters">Suodata</button>
         </section>
 
         <!-- Restaurant List Section -->
         <section id="restaurant-list">
-            <h2>Ravintolat</h2>
+            <h2 data-translate="restaurants">Ravintolat</h2>
             <ul id="restaurants"></ul>
         </section>
 
         <!-- Map Section -->
         <section id="map-section">
-            <h2>Kartta</h2>
+            <h2 data-translate="map">Kartta</h2>
             <div id="map" style="width: 100%; height: 400px;"></div>
         </section>
     </main>
     <footer>
         <p>&copy; 2025 Elias Ojala</p>
     </footer>
-    <script src="app.js"></script>
+    <script src="scripts/app.js"></script>
     <script src="scripts/map.js"></script>
     <script src="scripts/language.js"></script>
 </body>

@@ -5,31 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kirjaudu sisään</title>
     <link rel="stylesheet" href="../styles/login.css">
-
-    <!-- Sweet alerts for nicer notifications -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
 </head>
 <body>
-    <header>
-        <h1>Kirjaudu sisään</h1>
-    </header>
-    <main>
-        <section id="login-section">
-            <h2>Kirjaudu sisään</h2>
-            <form id="login-form">
-                <label for="username">Käyttäjänimi:</label>
-                <input type="text" id="username" required>
-                <label for="password">Salasana:</label>
-                <input type="password" id="password" required>
-                <button type="submit">Kirjaudu</button>
-                <p><a href="register.html" aria-label="Rekisteröidy sivulle">Rekisteröidy</a></p>
-            </form>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2025 Elias Ojala</p>
-    </footer>
+    <section id="login-section">
+        <h2>Kirjaudu sisään</h2>
+        <form id="login-form">
+            <label for="username">Käyttäjänimi:</label>
+            <input type="text" id="username" required>
+            <label for="password">Salasana:</label>
+            <input type="password" id="password" required>
+            <button type="submit">Kirjaudu</button>
+        </form>
+        <p>
+            Ei tiliä? <a href="register.html">Rekisteröidy täällä</a>
+        </p>
+    </section>
     <script src="../scripts/login.js"></script>
 </body>
 </html>

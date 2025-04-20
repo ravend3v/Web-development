@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load translations
     async function loadTranslations(language) {
-        const response = await fetch('./localization.json');
+        const response = await fetch('../localization.json');
         const translations = await response.json();
         applyTranslations(translations[language]);
     }
@@ -14,7 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyTranslations(translations) {
         document.querySelectorAll('[data-translate]').forEach(element => {
             const key = element.getAttribute('data-translate');
-            element.textContent = translations[key];
+            if (element.tagName === 'INPUT' && element.type === 'text') {
+                element.setAttribute('placeholder', translations[key]);
+            } else {
+                element.textContent = translations[key];
+            }
         });
     }
 
