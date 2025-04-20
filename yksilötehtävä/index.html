@@ -26,9 +26,13 @@
         <section id="filter-section">
             <h2 data-translate="filter-title">Suodata ravintoloita</h2>
             <label data-translate="city" for="city-filter">Kaupunki:</label>
-            <input data-translate="city-input" type="text" id="city-filter" placeholder="Kirjoita kaupunki">
+            <select data-translate="city-input" id="city-filter">
+                <option data-translate="all-cities" value="">Kaikki</option>
+            </select>
             <label data-translate="provider" for="provider-filter">Palveluntarjoaja:</label>
-            <input data-translate="provider-input" type="text" id="provider-filter" placeholder="Kirjoita palveluntarjoaja">
+            <select data-translate="provider-input" id="provider-filter">
+                <option data-translate="all-providers" value="">Kaikki</option>
+            </select>
             <button data-translate="filter" id="apply-filters">Suodata</button>
         </section>
 
@@ -47,8 +51,8 @@
     <footer>
         <p>&copy; 2025 Elias Ojala</p>
     </footer>
-    <script src="scripts/app.js"></script>
+    <script type="module" src="scripts/app.js"></script>
     <script src="scripts/map.js"></script>
-    <script src="scripts/language.js"></script>
+    <script type="module" src="scripts/language.js"></script>
 </body>
 </html>

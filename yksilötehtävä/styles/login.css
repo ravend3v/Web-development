@@ -1,27 +1,18 @@
 /* General styles */
-body {
-    font-family: Arial, sans-serif;
+html, body {
+    height: 100%;
     margin: 0;
-    padding: 0;
     display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-header {
-    background-color: #0073e6;
-    color: white;
-    text-align: center;
-    padding: 20px 0;
+    align-items: center;
+    justify-content: center;
 }
 
 main {
-    flex: 1;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    width: 100%;
+    height: 100%;
 }
 
 section {

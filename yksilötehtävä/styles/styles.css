@@ -27,7 +27,8 @@ header h1 {
 #user-actions {
     display: flex;
     gap: 10px;
-    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+    flex-wrap: wrap;
+    margin-right: 10px;
 }
 
 /* Buttons styling */

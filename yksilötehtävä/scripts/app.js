@@ -1,3 +1,5 @@
+import { loadTranslations } from "./language.js";
+
 document.addEventListener('DOMContentLoaded', () => {
     const restaurantList = document.getElementById('restaurants');
     const cityFilter = document.getElementById('city-filter');
@@ -49,6 +51,54 @@ document.addEventListener('DOMContentLoaded', () => {
     }).addTo(map);
     const markers = L.layerGroup().addTo(map);
 
+    // Populate the city and provider filters
+    function populateFilterOptions(restaurants) {
+        const cityFilter = document.getElementById('city-filter');
+        const providerFilter = document.getElementById('provider-filter');
+    
+        // Clear existing options
+        cityFilter.innerHTML = '';
+        providerFilter.innerHTML = '';
+    
+        // Add "All" option to both dropdowns
+        const allCityOption = document.createElement('option');
+        allCityOption.value = '';
+        allCityOption.setAttribute('data-translate', 'all-cities');
+        allCityOption.textContent = 'Kaikki';
+        cityFilter.appendChild(allCityOption);
+    
+        const allProviderOption = document.createElement('option');
+        allProviderOption.value = '';
+        allProviderOption.setAttribute('data-translate', 'all-providers');
+        allProviderOption.textContent = 'Kaikki';
+        providerFilter.appendChild(allProviderOption);
+    
+        // Extract unique cities and providers
+        const cities = [...new Set(restaurants.map(restaurant => restaurant.city))];
+        const providers = [...new Set(restaurants.map(restaurant => restaurant.company))];
+    
+        // Populate city dropdown
+        cities.forEach(city => {
+            const option = document.createElement('option');
+            option.value = city.toLowerCase();
+            option.textContent = city;
+            cityFilter.appendChild(option);
+        });
+    
+        // Populate provider dropdown
+        providers.forEach(provider => {
+            const option = document.createElement('option');
+            option.value = provider.toLowerCase();
+            option.textContent = provider;
+            providerFilter.appendChild(option);
+        });
+    
+        // Reapply translations after adding options
+        const defaultLanguage = localStorage.getItem('language') || 'en';
+        loadTranslations(defaultLanguage);
+    }
+
+    // Fetch restaurants from the API
     function fetchRestaurants() {
         fetch('https://media2.edu.metropolia.fi/restaurant/api/v1/restaurants')
             .then(response => {
@@ -59,12 +109,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 restaurants = Array.isArray(data) ? data : data.restaurants || [];
                 displayRestaurants(restaurants);
                 displayMarkers(restaurants);
+                populateFilterOptions(restaurants);
             })
             .catch(error => console.error(error.message));
     }
 
     function displayRestaurants(restaurants) {
-        restaurantList.innerHTML = ''; // Clear existing list
+        restaurantList.innerHTML = '';
         restaurants.forEach(restaurant => {
             const li = document.createElement('li');
             li.textContent = `${restaurant.name} (${restaurant.city}, ${restaurant.company})`;
@@ -73,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayMarkers(restaurants) {
-        markers.clearLayers(); // Clear existing markers
+        markers.clearLayers();
         restaurants.forEach(restaurant => {
             if (restaurant.location?.coordinates) {
                 const [longitude, latitude] = restaurant.location.coordinates;
@@ -89,8 +140,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const provider = providerFilter.value.toLowerCase();
 
         const filteredRestaurants = restaurants.filter(restaurant =>
-            (!city || restaurant.city.toLowerCase().includes(city)) &&
-            (!provider || restaurant.company.toLowerCase().includes(provider))
+            (city === '' || restaurant.city.toLowerCase() === city) &&
+            (provider === '' || restaurant.company.toLowerCase() === provider)
         );
 
         displayRestaurants(filteredRestaurants);

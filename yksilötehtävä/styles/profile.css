@@ -26,18 +26,19 @@ header h1 {
     margin-right: 20px;
 }
 
-#home-button button {
-    padding: 10px 20px;
+#home-button {
+    padding: 5px 10px;
     font-size: 16px;
     background-color: white;
-    color: #0073e6;
+    color: #000000;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    cursor: pointer;
 }
 
-#home-button button:hover {
+#home-button:hover {
     background-color: #005bb5;
     color: white;
 }
@@ -50,6 +51,11 @@ header h1 {
     border-radius: 5px;
     background-color: #fff;
     cursor: pointer;
+}
+
+#language-selector:hover {
+    background-color: #005bb5;
+    color: white;
 }
 
 #language-selector:focus {
